@@ -1,0 +1,56 @@
+#!/bin/bash
+clear
+ipsaya=$(wget -qO- ipinfo.io/ip)
+data_server=$(curl -v --insecure --silent https://google.com/ 2>&1 | grep Date | sed -e 's/< Date: //')
+clear
+grenbo="\e[92;1m"
+NC='\033[0m'
+echo -e "\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+echo -e " \e[1;97;101m               MENU VMESS               \e[0m"
+echo -e "\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+echo -e "\033[1;93m  ${grenbo}1.${NC} \033[1;36mCreate Vmess Account${NC}"
+echo -e "\033[1;93m  ${grenbo}2.${NC} \033[1;36mCreate Triall Vmess Account${NC}"
+echo -e "\033[1;93m  ${grenbo}3.${NC} \033[1;36mDetails Vmess Account${NC}"
+echo -e "\033[1;93m  ${grenbo}4.${NC} \033[1;36mDelete Vmess Account${NC}"
+echo -e "\033[1;93m  ${grenbo}5.${NC} \033[1;36mRenew Vmess Account${NC}"
+echo -e "\033[1;93m  ${grenbo}6.${NC} \033[1;36mLogin Vmess Account${NC}"
+echo -e "\033[1;93m  ${grenbo}7.${NC} \033[1;36mUsage Vmess Account${NC}"
+echo -e ""
+echo -e "\033[1;93m  ${grenbo}0.${NC} \033[1;36mBack To Menu${NC}"
+echo -e ""
+read -p "Select From Options [ 1 - 7 or 0 ] : " menu
+case $menu in
+1)
+    add-ws
+    ;;
+2)
+    triall-ws
+    ;;
+3)
+    user-ws
+    ;;
+    
+4)   del-ws
+    ;;
+    
+5)    renew-ws
+    ;;
+
+6)   
+    cek-ws
+    ;;
+
+7)  usage-akun-xray-vmess
+    ;;
+
+8)
+   vmesss
+   ;;
+0)
+    menu
+    ;;
+    
+*)
+    menu
+    ;;
+esac

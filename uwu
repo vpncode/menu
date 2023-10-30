@@ -1,0 +1,190 @@
+#!/bin/bash
+BURIQ () {
+    curl -sS https://raw.githubusercontent.com/scscp/permission/main/ip > /root/tmp
+    data=( `cat /root/tmp | grep -E "^### " | awk '{print $2}'` )
+    for user in "${data[@]}"
+    do
+    exp=( `grep -E "^### $user" "/root/tmp" | awk '{print $3}'` )
+    d1=(`date -d "$exp" +%s`)
+    d2=(`date -d "$biji" +%s`)
+    exp2=$(( (d1 - d2) / 86400 ))
+    if [[ "$exp2" -le "0" ]]; then
+    echo $user > /etc/.$user.ini
+    else
+    rm -f  /etc/.$user.ini > /dev/null 2>&1
+    fi
+    done
+    rm -f  /root/tmp
+}
+# https://raw.githubusercontent.com/scscp/permission/main/ip
+MYIP=$(curl -sS ipv4.icanhazip.com)
+Name=$(curl -sS https://raw.githubusercontent.com/scscp/permission/main/ip | grep $MYIP | awk '{print $2}')
+echo $Name > /usr/local/etc/.$Name.ini
+CekOne=$(cat /usr/local/etc/.$Name.ini)
+Exp=$(curl -sS https://raw.githubusercontent.com/scscp/permission/main/ip | grep $MYIP | awk '{print $3}')
+
+Bloman () {
+if [ -f "/etc/.$Name.ini" ]; then
+CekTwo=$(cat /etc/.$Name.ini)
+    if [ "$CekOne" = "$CekTwo" ]; then
+        res="Expired"
+    fi
+else
+res="Permission Accepted..."
+fi
+}
+
+PERMISSION () {
+    MYIP=$(curl -sS ipv4.icanhazip.com)
+    IZIN=$(curl -sS https://raw.githubusercontent.com/scscp/permission/main/ip | awk '{print $4}' | grep $MYIP)
+    if [ "$MYIP" = "$IZIN" ]; then
+    Bloman
+    else
+    res="Permission Denied!"
+    fi
+    BURIQ
+}
+cek=$(service ssh status | grep active | cut -d ' ' -f5)
+if [ "$cek" = "active" ]; then
+stat=-f5
+else
+stat=-f7
+fi
+ssh=$(service ssh status | grep active | cut -d ' ' $stat)
+if [ "$ssh" = "active" ]; then
+ressh="${BBlue}ON${NC}"
+else
+ressh="${red}OFF${NC}"
+fi
+ngx=$(service nginx status | grep active | cut -d ' ' $stat)
+if [ "$ngx" = "active" ]; then
+resngx="${BBlue}ON${NC}"
+else
+resngx="${red}OFF${NC}"
+fi
+dbr=$(service dropbear status | grep active | cut -d ' ' $stat)
+if [ "$dbr" = "active" ]; then
+resdbr="${BBlue}ON${NC}"
+else
+resdbr="${red}OFF${NC}"
+fi
+v2r=$(service xray status | grep active | cut -d ' ' $stat)
+if [ "$v2r" = "active" ]; then
+resv2r="${BBlue}ON${NC}"
+else
+resv2r="${red}OFF${NC}"
+fi
+# STATUS SERVICE UDP CUSTOM
+if [[ $udpc == "running" ]]; then
+   udp2="${GB}[ ON ]${NC}${NC}"
+else
+   udp2="${RB}[ OFF ]${NC}"
+fi
+RED='\033[0;31m'
+NC='\033[0m'
+gray="\e[1;30m"
+Blue="\033[36m"
+GREEN='\033[0;32m'
+grenbo="\e[92;1m"
+YELL='\033[0;33m'
+KONENG="\033[1;93m"
+Dev="CandraVpnz"
+ISP=$(curl -s ipinfo.io/org | cut -d " " -f 2-10 ) 
+CITY=$(curl -s ipinfo.io/city )
+NS=$(cat /etc/xray/dns)
+IPVPS=$(curl -s ipv4.icanhazip.com)
+domain=$(cat /etc/xray/domain)
+RAM=$(free -m | awk 'NR==2 {print $2}')
+USAGERAM=$(free -m | awk 'NR==2 {print $3}')
+MEMOFREE=$(printf '%-1s' "$(free -m | awk 'NR==2{printf "%.2f%%", $3*100/$2 }')")
+LOADCPU=$(printf '%-0.00001s' "$(top -bn1 | awk '/Cpu/ { cpu = "" 100 - $8 "%" }; END { print cpu }')")
+MODEL=$(cat /etc/os-release | grep -w PRETTY_NAME | head -n1 | sed 's/=//g' | sed 's/"//g' | sed 's/PRETTY_NAME//g')
+CORE=$(printf '%-1s' "$(grep -c cpu[0-9] /proc/stat)")
+DATEVPS=$(date +'%d/%m/%Y')
+TIMEZONE=$(printf '%(%H:%M:%S)T')
+SERONLINE=$(uptime -p | cut -d " " -f 2-10000)
+if [ ! -e /etc/vmess ]; then
+    mkdir -p /etc/vmess
+    touch /etc/vmess/.vmess.db
+fi
+vms=$(cat /etc/vmess/.vmess.db)
+if [[ $vms = "" ]]; then
+    vm="0"
+else
+    vm=$(cat /etc/vmess/.vmess.db | grep "###" | wc -l)
+fi
+
+if [ ! -e /etc/vless ]; then
+    mkdir -p /etc/vless
+    touch /etc/vless/.vless.db
+fi
+vms=$(cat /etc/vless/.vless.db)
+if [[ $vms = "" ]]; then
+    vl="0"
+else
+    vl=$(cat /etc/vless/.vless.db | grep "###" | wc -l)
+fi
+
+if [ ! -e /etc/trojan ]; then
+    mkdir -p /etc/trojan
+    touch /etc/trojan/.trojan.db
+fi
+vms=$(cat /etc/trojan/.trojan.db)
+if [[ $vms = "" ]]; then
+    tr="0"
+else
+    tr=$(cat /etc/trojan/.trojan.db | grep "###" | wc -l)
+fi
+if [ ! -e /etc/shadowsocks ]; then
+    mkdir -p /etc/shadowsocks
+    touch /etc/shadowsocks/.shadowsocks.db
+fi
+vms=$(cat /etc/shadowsocks/.shadowsocks.db)
+if [[ $vms = "" ]]; then
+    ss="0"
+else
+    ss=$(cat /etc/shadowsocks/.shadowsocks.db | grep "###" | wc -l)
+fi
+if [ ! -e /etc/ssh ]; then
+    mkdir -p /etc/ssh
+    touch /etc/ssh/.ssh.db
+fi
+vms=$(cat /etc/ssh/.ssh.db)
+if [[ $vms = "" ]]; then
+    ssh="0"
+else
+    ssh=$(cat /etc/ssh/.ssh.db | grep "###" | wc -l)
+fi
+clear
+echo -e "\033[1;93m┌─────────────────────────────────────────────────┐${NC}"
+echo -e "\033[1;93m│ ${BGX}               KINGSTORES              ${NC} ${NC}"
+echo -e "\033[1;93m└─────────────────────────────────────────────────┘${NC}"
+echo -e "\033[1;93m┌─────────────────────────────────────────────────┐${NC}"
+echo -e "\033[1;93m│ ${NC}System OS${NC}     : ${NC}$MODEL${NC}"
+echo -e "\033[1;93m│ ${NC}Server RAM${NC}    : ${NC}$RAM MB $NC"
+echo -e "\033[1;93m│ ${NC}Uptime Server${NC} : ${NC}$SERONLINE${NC}"
+echo -e "\033[1;93m│ ${NC}Core System${NC}   : ${NC}$CORE${NC}"
+echo -e "\033[1;93m│ ${NC}Date${NC}          : ${NC}$DATEVPS${NC}"
+echo -e "\033[1;93m│ ${NC}Time${NC}          : ${NC}$TIMEZONE${NC}"
+echo -e "\033[1;93m│ ${NC}ISP ${NC}          : ${NC}$ISP${NC}"
+echo -e "\033[1;93m│ ${NC}CITY${NC}          : ${NC}$CITY${NC}"
+echo -e "\033[1;93m│ ${NC}IP VPS${NC}        : ${KONENG}$IPVPS${NC}"
+echo -e "\033[1;93m│ ${NC}Domain${NC}        : ${KONENG}$domain${NC}"
+echo -e "\033[1;93m│ ${NC}NS Domain${NC}     : $NS${NC}"
+echo -e "\033[1;93m└─────────────────────────────────────────────────┘${NC}"
+echo -e "\033[1;93m┌─────────────────────────────────────────────────┐${NC}"
+echo -e "\033[1;93m│   ${Blue}XRAY${NC}: [${v2r}]     ${Blue}NGINX${NC}: [${ngx}${NC}]     ${Blue}HAPROXY${NC}: [${ngx}${NC}]  ${KONENG} ${NC}"
+echo -e "\033[1;93m└─────────────────────────────────────────────────┘${NC}"
+echo -e "\033[1;93m    ┌──────────────────────────────────────────┐\033[0m"
+echo -e "\033[1;93m    │\e[0m ${KONENG}SSH  VMESS   VLESS  TROJAN   SHADOWSOCKS$NC"
+echo -e "\033[1;93m    │\e[0m ${Blue} $ssh     $vm       $vl      $tr           $ss   $NC"
+echo -e "\033[1;93m    └──────────────────────────────────────────┘\033[0m"
+echo -e "\033[1;93m   ┌───────────────────────────────────────────┐${NC}"
+echo -e "\033[1;93m   │  ${NC}Version     : v1.0 LTS${NC}"
+echo -e "\033[1;93m   │  ${NC}Author Name : ${Blue} KINGSTORES ${NC}"
+echo -e "\033[1;93m   │  ${NC}Client Name : ${Blue}$Name${NC}"
+echo -e "\033[1;93m   │  ${NC}Expiry In   : ${Blue}monthly$${NC}"
+echo -e "\033[1;93m   └───────────────────────────────────────────┘${NC}"
+echo -e ""
+echo -e "           to aces use ☞ menu command"    
+echo -e ""
